@@ -1,0 +1,25 @@
+.movieItem{
+    text-align: left;
+    margin: calc((100% - 5*18%)/10);
+    flex: 0 0 18%;
+    max-width: 25%;
+    .movieItem__img{
+        width: 100%;
+        height: 16rem;
+        border-radius: 5px;
+        overflow: hidden;
+        img{
+            width: 100%;
+            height: 100%;
+        }
+        .movieItem__noImg{
+            background-color: #fff;
+            text-align: center;
+            height: 100%;
+            h2{
+                line-height: 16rem;
+                margin: 0;
+            }
+        }
+    }
+}
