@@ -1,6 +1,6 @@
 <template>
     <section class="movieItem">
-        <div class="movieItem__img">
+        <div class="movieItem__img" @click="$emit('movie-select')">
             <img v-if="movie.Poster!=='N/A'" :src="movie.Poster" :alt="movie.Title"/>
             <div v-else class="movieItem__noImg">
                 <h2>NO IMAGES ADD</h2>
@@ -16,7 +16,8 @@
 <script>
     export default {
         name:'MovieItem',
-        props: ['movie']
+        props: ['movie'],
+
     }
 </script>
 

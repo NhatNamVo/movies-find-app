@@ -1,13 +1,13 @@
 <template>
   <div>
-    <MovieListPage ref="movieListRef" :movieLists="movieLists" />
-    <LoadingComponent v-if="loading" />
+    <movie-list-page ref="movieListRef" :movieLists="movieLists" :loading="loading"/>
+    <loading-component v-if="loading" />
   </div>
 </template>
 
 <script>
 import MovieListPage from "../components/movie-list/MovieList.vue";
-import LoadingComponent from "../components/Loading.vue";
+import LoadingComponent from "../components/loading/Loading.vue";
 import getMovies from "../api/getMovies";
 import store from "../store/index";
 
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      page: 1,
+      page: store.currentPage,
       moviesTotalResult: null,
       isInfinityLoad: false,
       loading: store.loading,
@@ -34,7 +34,6 @@ export default {
         .getAllMovies(this.search, this.page)
         .then((res) => {
           const { data } = res;
-          console.log(data);
           if (data.Response === 'True') {
             this.loading = false;
             const movies = this.movieLists.concat(data.Search);
@@ -53,7 +52,6 @@ export default {
     },
     handleScroll() {
       const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      console.log(scrollTop,scrollHeight, clientHeight);
       if(scrollTop + clientHeight === scrollHeight){
         if(this.isInfinityLoad){
           this.callApi();
@@ -68,6 +66,7 @@ export default {
         this.isInfinityLoad = false;
       } else if (!!newValue.length && newValue.length < this.moviesTotalResult) {
         this.page++;
+        store.currentPage = this.page;
         this.isInfinityLoad = true;
         const {offsetHeight} = this.$refs.movieListRef.$el;
         if(offsetHeight<window.innerHeight) {
@@ -76,11 +75,7 @@ export default {
         }
       }
     },
-    loading(newValue, oldValue) {
-      console.log("loading", newValue, oldValue);
-    },
     search() {
-        console.log('ndsadsad');
       this.movieLists = [];
       this.callApi();
     },
@@ -95,13 +90,10 @@ export default {
     },
   },
   mounted() {
+    this.page = store.currentPage,
+    this.movieLists = store.movieLists;
     this.callApi();
-    console.log(this.search);
     document.addEventListener('scroll',this.handleScroll);
-  },
-  updated() {
-    console.dir(this.$refs.movieListRef.$el);
-    console.log(window.innerHeight);
   },
   beforeDestroy(){
     document.removeEventListener('scroll',this.handleScroll);

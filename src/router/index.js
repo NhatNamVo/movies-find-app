@@ -21,12 +21,34 @@ const routes = [
 
 const router = new VueRouter({
     mode: "history",
+    scrollBehavior(to, from, savedPosition){
+        console.log(savedPosition);
+        if(savedPosition){
+            return savedPosition;
+        }
+        else{
+            return {
+                x: 0, y: 0,
+                behavior: 'smooth'
+            };
+        }
+    },
     routes,
 });
 
-router.beforeResolve((to,from,next) => {
-    store.loading = true;
-    next();
+router.beforeEach((to,from,next) => {
+    console.log(to.path.includes('movie'));
+    if(to.path.includes('movie')){
+       if(store.currentIndex !== null) {
+           next();
+       }
+       else{
+           next({name: 'home'});
+       }
+    }
+    else{
+        next();
+    }
 })
 
 export default router;

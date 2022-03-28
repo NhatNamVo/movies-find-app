@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import SearchComponent from '../Search.vue';
+import SearchComponent from '../search/Search.vue';
     export default {
         name: 'HeaderComponent',
         components: {
